@@ -9,7 +9,7 @@
 | Script | Purpose | Changes system state? | Status |
 |---|---|---|---|
 | [`Python/network_doctor.py`](Python/network_doctor.py) | Detect local IPv4 and gateway; test external TCP, DNS and a target service | No; network probes only | Diagnostic logic has unit tests |
-| [`PowerShell/Windows-HealthCheck.ps1`](PowerShell/Windows-HealthCheck.ps1) | Lightweight Windows system, storage, memory, services and BitLocker inventory | No | Needs Windows testing |
+| [`PowerShell/Windows-HealthCheck.ps1`](PowerShell/Windows-HealthCheck.ps1) | Windows health summary: OK / WARNING / PROBLEM / NOT CHECKED, plus JSON export | No | Needs Windows testing |
 | [`PowerShell/AD-BulkUserCreation.ps1`](PowerShell/AD-BulkUserCreation.ps1) | CSV-based AD user provisioning, simulation by default | **Yes, only with `-Apply` and confirmation** | Needs isolated AD lab testing |
 | [`Bash/linux-healthcheck.sh`](Bash/linux-healthcheck.sh) | Resource, disk, systemd and SSH status | No | Bash syntax checked automatically |
 | [`PowerShell/Security-BaselineChecker.ps1`](PowerShell/Security-BaselineChecker.ps1) | Indicative Windows firewall, Defender, BitLocker and UAC checks | No | Needs Windows testing |
@@ -40,6 +40,14 @@ bash Bash/linux-healthcheck.sh
 .\PowerShell\Windows-HealthCheck.ps1
 .\PowerShell\Windows-HealthCheck.ps1 -OutputPath .\health.json
 ```
+
+The script prints clear OK / WARNING / PROBLEM / NOT CHECKED statuses and a summary. Bilingual output:
+
+```powershell
+.\PowerShell\Windows-HealthCheck.ps1 -Language en -OutputPath .\health.json
+```
+
+Default disk/memory thresholds are indicative (warning below 15%, problem below 5%). It does not claim full Windows health or security; unavailable checks are marked NOT CHECKED.
 
 ### Security Baseline Checker (PowerShell)
 
@@ -72,9 +80,17 @@ The example CSV uses a **fictional domain** (`example.local`) and must not be ap
 1. **Incident Timeline** — reconstruct a symptom timeline from sanitized exported logs.
 2. **ChangeGuard** — preview likely impacts and plan rollback before routine changes.
 3. **Port Story** — explain DNS/TCP/routing test results in plain language.
-4. **Config Drift Lite** — compare two configuration snapshots and flag meaningful changes.
+4. **[Config Drift Lite](ConfigDriftLite/README.en.md)** — **available desktop prototype** for comparing two local directories, viewing line-by-line diffs and exporting an offline HTML report.
 
-These tools are **ideas only and are not implemented yet**.
+The other three ideas are not implemented yet.
+
+### Config Drift Lite (Python 3.10+ with Tkinter)
+
+```bash
+python ConfigDriftLite/app.py
+```
+
+Docs: [English](ConfigDriftLite/README.en.md) · [Français](ConfigDriftLite/README.md). Offline and read-only; reports may contain confidential information.
 
 ## Contribute and publish
 
