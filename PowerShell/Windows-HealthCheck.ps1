@@ -77,7 +77,8 @@ if ($null -ne $os -and $os.TotalVisibleMemorySize -gt 0) {
     $freePct = [math]::Round(100 * $os.FreePhysicalMemory / $os.TotalVisibleMemorySize, 1)
     $freeGB = [math]::Round($os.FreePhysicalMemory / 1MB, 2)
     $status = if ($freePct -lt 5) { 'FAIL' } elseif ($freePct -lt 15) { 'WARN' } else { 'OK' }
-    Add-Check -Name $T.Memory -Status $status -Details ("{0} Go libres ({1} %)" -f $freeGB, $freePct)
+        $memoryDetails = if ($Language -eq "fr") { "{0} Go libres ({1} %)" -f $freeGB, $freePct } else { "{0} GB free ({1}%)" -f $freeGB, $freePct }
+    Add-Check -Name $T.Memory -Status $status -Details $memoryDetails
 } else {
     Add-Check -Name $T.Memory -Status UNKNOWN -Details $T.NoData
 }
@@ -93,7 +94,8 @@ try {
         $freePct = [math]::Round(100 * $disk.FreeSpace / $disk.Size, 1)
         $freeGB = [math]::Round($disk.FreeSpace / 1GB, 2)
         $status = if ($freePct -lt 5) { 'FAIL' } elseif ($freePct -lt 15) { 'WARN' } else { 'OK' }
-        Add-Check -Name "$($T.Disk) $($disk.DeviceID)" -Status $status -Details ("{0} Go libres ({1} %)" -f $freeGB, $freePct)
+                $diskDetails = if ($Language -eq "fr") { "{0} Go libres ({1} %)" -f $freeGB, $freePct } else { "{0} GB free ({1}%)" -f $freeGB, $freePct }
+        Add-Check -Name "$($T.Disk) $($disk.DeviceID)" -Status $status -Details $diskDetails
     }
 } catch {
     Add-Check -Name $T.Disk -Status UNKNOWN -Details $T.NoData
@@ -146,7 +148,7 @@ foreach ($status in @('OK','WARN','FAIL','UNKNOWN','INFO')) {
     $counts[$status] = @($script:Checks | Where-Object { $_.Status -eq $status }).Count
 }
 Write-Host ""
-Write-Host ("=== {0} : OK={1} | ATTENTION={2} | PROBLEMES={3} | NON EVALUES={4} | INFO={5} ===" -f $T.Summary, $counts.OK, $counts.WARN, $counts.FAIL, $counts.UNKNOWN, $counts.INFO) -ForegroundColor Cyan
+Write-Host ("=== {0}: OK={1} | {2}={3} | {4}={5} | {6}={7} | INFO={8} ===" -f $T.Summary, $counts.OK, $T.WARN, $counts.WARN, $T.FAIL, $counts.FAIL, $T.UNKNOWN, $counts.UNKNOWN, $counts.INFO) -ForegroundColor Cyan
 if ($counts.WARN -eq 0 -and $counts.FAIL -eq 0) {
     Write-Host $T.Clean -ForegroundColor Green
 } else {
