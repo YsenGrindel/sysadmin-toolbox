@@ -9,3 +9,6 @@ health.json
 *.private.csv
 .DS_Store
 .vscode/
+drift-report.html
+ConfigDriftLite/*report*.html
+reports/
