@@ -1,4 +1,4 @@
-# SysAdmin Toolbox 🧰
+# SysAdmin Toolbox 
 
 **Langues / Languages :** 🇫🇷 Français (ce document) · 🇬🇧 [English](README.en.md)
 
