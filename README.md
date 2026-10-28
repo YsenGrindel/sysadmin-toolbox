@@ -9,7 +9,7 @@
 | Script | Fonction | Modification du système ? | État |
 |---|---|---|---|
 | [`Python/network_doctor.py`](Python/network_doctor.py) | Test IPv4 local, passerelle, TCP externe, DNS et service cible | Non, uniquement des connexions de test | Tests unitaires sur le diagnostic |
-| [`PowerShell/Windows-HealthCheck.ps1`](PowerShell/Windows-HealthCheck.ps1) | Inventaire léger Windows : système, stockage, mémoire, services, BitLocker | Non | À tester sous Windows |
+| [`PowerShell/Windows-HealthCheck.ps1`](PowerShell/Windows-HealthCheck.ps1) | Bilan Windows avec statuts OK / ATTENTION / PROBLÈME / NON ÉVALUÉ, résumé et JSON | Non | À tester sous Windows |
 | [`PowerShell/AD-BulkUserCreation.ps1`](PowerShell/AD-BulkUserCreation.ps1) | Création AD CSV avec simulation par défaut | **Oui, uniquement avec `-Apply` et confirmation** | À tester en lab AD isolé |
 | [`Bash/linux-healthcheck.sh`](Bash/linux-healthcheck.sh) | Ressources, espace disque, systemd et SSH | Non | Syntaxe validable automatiquement |
 | [`PowerShell/Security-BaselineChecker.ps1`](PowerShell/Security-BaselineChecker.ps1) | Contrôles indicatifs pare-feu, Defender, BitLocker et UAC | Non | À tester sous Windows |
@@ -38,6 +38,15 @@ bash Bash/linux-healthcheck.sh
 .\PowerShell\Windows-HealthCheck.ps1
 .\PowerShell\Windows-HealthCheck.ps1 -OutputPath .\health.json
 ```
+
+Version bilingue et bilan lisible :
+
+```powershell
+.\PowerShell\Windows-HealthCheck.ps1 -Language fr
+.\PowerShell\Windows-HealthCheck.ps1 -Language en -OutputPath .\health.json
+```
+
+Les seuils par défaut sont indicatifs (mémoire/disque : attention sous 15 %, problème sous 5 %). Ce n'est ni un diagnostic exhaustif ni une preuve que Windows est sécurisé. Statuts *NON ÉVALUÉ* si une information ne peut pas être lue ; BitLocker dépend de la politique du poste.
 
 ### Security Baseline Checker (PowerShell)
 
@@ -70,9 +79,17 @@ Le CSV exemple utilise un **domaine fictif** (`example.local`) et ne doit pas ê
 1. **Incident Timeline** — reconstituer une chronologie de symptômes à partir de journaux exportés (sans données sensibles).
 2. **ChangeGuard** — prévisualiser l'impact et proposer un plan de retour arrière avant certaines modifications récurrentes.
 3. **Port Story** — expliquer un diagnostic de connexion en langage compréhensible à partir d'observations (DNS/TCP/routage).
-4. **Config Drift Lite** — comparer deux instantanés de configuration et signaler les différences importantes.
+4. **[Config Drift Lite](ConfigDriftLite/README.md)** — **prototype d'application graphique déjà disponible** pour comparer deux dossiers de configurations, visualiser les modifications et exporter un rapport HTML local.
 
-Ces outils ne sont pas encore implémentés.
+Les trois autres outils originaux ne sont pas encore implémentés.
+
+### Config Drift Lite (Python 3.10+ et Tkinter)
+
+```bash
+python ConfigDriftLite/app.py
+```
+
+Documentation : [Config Drift Lite — Français](ConfigDriftLite/README.md) · [English](ConfigDriftLite/README.en.md). Fonctionne hors ligne et en lecture seule ; rapports potentiellement sensibles, à conserver localement.
 
 ## Contribuer et publier
 
