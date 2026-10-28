@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+.venv/
+.env
+.env.*
+!.env.example
+*.log
+health.json
+*.private.csv
+.DS_Store
+.vscode/
