@@ -1,0 +1,3 @@
+SamAccountName,GivenName,Surname,OU,Groups
+jdupont,Jean,Dupont,"OU=Employees,DC=example,DC=local",Employees|Support
+mlegrand,Marie,Legrand,"OU=Employees,DC=example,DC=local",Employees
