@@ -1,111 +1,60 @@
-# SysAdmin Toolbox 
+# SysAdmin Toolbox 🧰
 
-**Langues / Languages :** 🇫🇷 Français (ce document) · 🇬🇧 [English](README.en.md)
+**Langues / Languages :** 🇫🇷 Français · 🇬🇧 [English](README.en.md)
 
-**Boîte à outils open source pour techniciens systèmes et réseaux** — scripts simples, documentés et conçus pour évoluer. Première version de travail (`v0.1.0`), **à valider en lab avant usage professionnel**.
+Cinq outils open source pour l'administration systèmes et réseaux. Les scripts restent séparés et utilisables en ligne de commande, mais ils proposent aussi des **lanceurs Windows par double-clic**.
 
-## Les cinq utilitaires
+> Version de travail : à tester en laboratoire avant une utilisation professionnelle. Les scripts publiés peuvent contenir des erreurs. Ne pas les utiliser sur des machines tierces sans autorisation.
 
-| Script | Fonction | Modification du système ? | État |
+## Téléchargement facile : fichier ZIP par outil
+
+Chaque archive contient **le lanceur .cmd et le script nécessaire (.ps1, .py ou .sh)**, dans le même dossier. Décompresser **tous** les fichiers, puis double-cliquer sur le fichier `Lancer-….cmd`.
+
+| Outil | Télécharger (ZIP) | Lanceur à double-cliquer | Conditions |
 |---|---|---|---|
-| [`Python/network_doctor.py`](Python/network_doctor.py) | Test IPv4 local, passerelle, TCP externe, DNS et service cible | Non, uniquement des connexions de test | Tests unitaires sur le diagnostic |
-| [`PowerShell/Windows-HealthCheck.ps1`](PowerShell/Windows-HealthCheck.ps1) | Bilan Windows avec statuts OK / ATTENTION / PROBLÈME / NON ÉVALUÉ, résumé et JSON | Non | À tester sous Windows |
-| [`PowerShell/AD-BulkUserCreation.ps1`](PowerShell/AD-BulkUserCreation.ps1) | Création AD CSV avec simulation par défaut | **Oui, uniquement avec `-Apply` et confirmation** | À tester en lab AD isolé |
-| [`Bash/linux-healthcheck.sh`](Bash/linux-healthcheck.sh) | Ressources, espace disque, systemd et SSH | Non | Syntaxe validable automatiquement |
-| [`PowerShell/Security-BaselineChecker.ps1`](PowerShell/Security-BaselineChecker.ps1) | Contrôles indicatifs pare-feu, Defender, BitLocker et UAC | Non | À tester sous Windows |
+| Windows HealthCheck | [Windows-HealthCheck.zip](downloads/Windows-HealthCheck.zip) | `Lancer-Windows-HealthCheck.cmd` | Windows + PowerShell |
+| Security Baseline Checker | [Security-BaselineChecker.zip](downloads/Security-BaselineChecker.zip) | `Lancer-Security-BaselineChecker.cmd` | Windows + PowerShell |
+| AD Bulk User Creation | [AD-BulkUserCreation.zip](downloads/AD-BulkUserCreation.zip) | `Lancer-AD-BulkUserCreation.cmd` | Simulation par défaut ; lab AD requis pour de vraies créations |
+| Network Doctor | [Network-Doctor.zip](downloads/Network-Doctor.zip) | `Lancer-Network-Doctor.cmd` | Windows + Python 3 |
+| Linux HealthCheck | [Linux-HealthCheck.zip](downloads/Linux-HealthCheck.zip) | `Lancer-Linux-HealthCheck.cmd` | Windows avec WSL/Linux installé ; sinon lancer le .sh sur Linux |
 
-## Démarrage rapide
+Autre possibilité : **Code → Download ZIP** sur cette page GitHub, puis extraire l'ensemble du dépôt. Tu trouveras les mêmes lanceurs dans les dossiers `PowerShell/`, `Python/` et `Bash/`, et le menu global **`Lancer-Toolbox.cmd`** à la racine.
 
-### Network Doctor (Python 3.9+)
+**Important :** les ZIP sont des copies datées des scripts à leur publication. En cas de mises à jour, télécharger à nouveau la dernière version. Les scripts PowerShell peuvent être bloqués par une politique d'exécution : les lanceurs conservent la fenêtre ouverte afin de lire l'erreur, mais ne désactivent pas cette protection.
 
-```bash
-python Python/network_doctor.py
-python Python/network_doctor.py --host example.com --port 443 --json
-python -m unittest discover -s tests -v
-```
+## Ce que font les outils
 
-Il teste la connexion TCP vers `1.1.1.1:443` et résout `example.com` par défaut. **Des requêtes réseau sont effectuées**. Une restriction de pare-feu, un proxy ou ICMP désactivé peuvent provoquer des faux négatifs ; ce programme suggère une piste et **ne prouve pas la cause**.
+| Script source | Fonction | Effet |
+|---|---|---|
+| [Windows-HealthCheck.ps1](PowerShell/Windows-HealthCheck.ps1) | Diagnostic Windows : mémoire, disques, services, BitLocker ; verdicts OK / ATTENTION / PROBLÈME / NON ÉVALUÉ ; export JSON optionnel | Lecture seule |
+| [Security-BaselineChecker.ps1](PowerShell/Security-BaselineChecker.ps1) | Indicateurs de sécurité : pare-feu, Defender, BitLocker, UAC | Lecture seule |
+| [AD-BulkUserCreation.ps1](PowerShell/AD-BulkUserCreation.ps1) | Prévisualise la création d'utilisateurs depuis un CSV. Modifie AD seulement avec `-Apply` et confirmations, depuis PowerShell ouvert manuellement | **Simulation au double-clic** |
+| [network_doctor.py](Python/network_doctor.py) | Teste IP, passerelle, TCP externe, DNS et port cible ; propose une hypothèse de diagnostic | Requêtes réseau de diagnostic |
+| [linux-healthcheck.sh](Bash/linux-healthcheck.sh) | Affiche état du système Linux, ressources, disque, systemd et SSH | Lecture seule |
 
-### Linux HealthCheck
+Le menu/lanceur **ne demande pas les droits administrateur automatiquement**. Des contrôles peuvent être marqués indisponibles selon le poste, les droits ou la politique en vigueur.
 
-```bash
-bash Bash/linux-healthcheck.sh
-```
-
-### Windows HealthCheck (PowerShell)
-
-**Pour un lancement par double-clic sous Windows**, ouvre `PowerShell/Lancer-Windows-HealthCheck.cmd`. Le lanceur **attend une touche avant de fermer la fenêtre**, y compris en cas d'erreur de PowerShell. Il ne désactive pas silencieusement la politique d'exécution.
-
-Sinon, ouvre toi-même PowerShell puis lance :
+## Utilisation avancée en terminal
 
 ```powershell
-.\PowerShell\Windows-HealthCheck.ps1 -Language fr
-.\PowerShell\Windows-HealthCheck.ps1 -Language fr -Pause
-```
-
-L'option `-Pause` attend la touche Entrée à la fin d'une exécution normale. Si Windows bloque le script selon sa politique d'exécution, vérifie sa provenance avant de le débloquer, sans désactiver globalement les protections.
-
-```powershell
-.\PowerShell\Windows-HealthCheck.ps1
-.\PowerShell\Windows-HealthCheck.ps1 -OutputPath .\health.json
-```
-
-Version bilingue et bilan lisible :
-
-```powershell
-.\PowerShell\Windows-HealthCheck.ps1 -Language fr
-.\PowerShell\Windows-HealthCheck.ps1 -Language en -OutputPath .\health.json
-```
-
-Les seuils par défaut sont indicatifs (mémoire/disque : attention sous 15 %, problème sous 5 %). Ce n'est ni un diagnostic exhaustif ni une preuve que Windows est sécurisé. Statuts *NON ÉVALUÉ* si une information ne peut pas être lue ; BitLocker dépend de la politique du poste.
-
-### Security Baseline Checker (PowerShell)
-
-```powershell
+.\PowerShell\Windows-HealthCheck.ps1 -Language fr -OutputPath .\health.json
+.\PowerShell\Windows-HealthCheck.ps1 -Language en -Pause
 .\PowerShell\Security-BaselineChecker.ps1
-```
-
-### AD Bulk User Creation (lab uniquement)
-
-```powershell
-# Simulation : ne crée rien
 .\PowerShell\AD-BulkUserCreation.ps1 -CsvPath .\examples\ad-users.example.csv
-
-# Seulement après avoir adapté le CSV au domaine de lab :
-.\PowerShell\AD-BulkUserCreation.ps1 -CsvPath .\examples\ad-users.example.csv -Apply
+python Python/network_doctor.py --host example.com --port 443 --json
 ```
 
-Le CSV exemple utilise un **domaine fictif** (`example.local`) et ne doit pas être appliqué tel quel. Prérequis pour `-Apply` : module `ActiveDirectory`, droits nécessaires, contrôleur de domaine joignable. Une demande de confirmation est prévue. Le mot de passe initial est saisi en mode sécurisé au moment de l'exécution. **Aucun mot de passe, clé de récupération ou donnée d'organisation ne doit être ajouté au dépôt.**
+Sous Linux : `bash Bash/linux-healthcheck.sh`. Network Doctor effectue des requêtes réseau et ses tests sont indicatifs (proxy, ICMP filtré et restrictions réseau peuvent conduire à de faux négatifs). **Ne jamais mettre de mots de passe, clés, jetons, fichiers internes de stage ou logs clients sur GitHub.**
 
-## Qualité et limites
+Pour la création AD réelle, sur un **laboratoire isolé et après vérification du CSV uniquement**, lancer manuellement le script avec `-Apply` depuis une console appropriée. Ne pas utiliser le lanceur à cette fin.
 
-- Les scripts sont volontairement petits, lisibles et sans dépendances tierces pour la partie Python.
-- Les scripts Windows/AD demandent des tests manuels dans des environnements adaptés avant déploiement.
-- Les scripts de contrôle ne remplacent pas une supervision, une stratégie de sauvegarde ou un audit de sécurité.
-- L'automatisation GitHub Actions teste la logique Python et la syntaxe Bash à chaque push.
-- Ne pas exécuter des scripts non revus sur des machines de production.
+## Fiabilité et contribution
 
-## Feuille de route : les outils originaux
+- Tests Python : `python -m unittest discover -s tests -v`.
+- Vérification syntaxique Bash dans GitHub Actions.
+- Les scripts PowerShell/AD doivent encore être validés sur Windows et en laboratoire.
+- [Contribuer](CONTRIBUTING.md) · [Publication](PUBLISHING.md) · [Licence MIT](LICENSE).
 
-1. **Incident Timeline** — reconstituer une chronologie de symptômes à partir de journaux exportés (sans données sensibles).
-2. **ChangeGuard** — prévisualiser l'impact et proposer un plan de retour arrière avant certaines modifications récurrentes.
-3. **Port Story** — expliquer un diagnostic de connexion en langage compréhensible à partir d'observations (DNS/TCP/routage).
-4. **[Config Drift Lite](https://github.com/YsenGrindel/Config-Drift-Lite)** — **prototype d'application graphique déjà disponible** pour comparer deux dossiers de configurations, visualiser les modifications et exporter un rapport HTML local.
+## Pistes de futurs outils
 
-Les trois autres outils originaux ne sont pas encore implémentés.
-
-### Config Drift Lite (Python 3.10+ et Tkinter)
-
-```bash
-python ConfigDriftLite/app.py
-```
-
-Projet désormais indépendant : [dépôt GitHub Config Drift Lite](https://github.com/YsenGrindel/Config-Drift-Lite). Le dossier local de ce dépôt conserve une copie historique du prototype ; les évolutions se feront sur le dépôt dédié.
-
-## Contribuer et publier
-
-Consultez [CONTRIBUTING.md](CONTRIBUTING.md) pour participer et [PUBLISHING.md](PUBLISHING.md) pour les étapes de publication.
-
-## Licence
-
-MIT — voir [LICENSE](LICENSE).
+**Incident Timeline**, **ChangeGuard** et **Port Story**. Ces idées ne sont pas encore implémentées.

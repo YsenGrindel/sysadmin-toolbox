@@ -1,112 +1,59 @@
 # SysAdmin Toolbox 🧰
 
-**Languages / Langues:** 🇬🇧 English (this document) · 🇫🇷 [Français](README.md)
+**Languages / Langues:** 🇬🇧 English · 🇫🇷 [Français](README.md)
 
-**Open-source toolbox for systems and network technicians** — small, documented scripts designed to grow over time. Initial work-in-progress release (`v0.1.0`), **must be validated in a lab before professional use**.
+Five open-source tools for systems and network administrators. Each script remains usable from a terminal and also offers a **Windows double-click launcher**.
 
-## Five starter tools
+> Work in progress: lab validation required before professional use. Review the code and obtain permission before running scripts on third-party machines.
 
-| Script | Purpose | Changes system state? | Status |
+## Easy downloads: one ZIP per tool
+
+Each ZIP includes **the .cmd launcher and the associated .ps1, .py or .sh script**, together in the same directory. Extract **all** the files, then double-click `Lancer-….cmd`.
+
+| Tool | Download ZIP | Double-click | Requirements |
 |---|---|---|---|
-| [`Python/network_doctor.py`](Python/network_doctor.py) | Detect local IPv4 and gateway; test external TCP, DNS and a target service | No; network probes only | Diagnostic logic has unit tests |
-| [`PowerShell/Windows-HealthCheck.ps1`](PowerShell/Windows-HealthCheck.ps1) | Windows health summary: OK / WARNING / PROBLEM / NOT CHECKED, plus JSON export | No | Needs Windows testing |
-| [`PowerShell/AD-BulkUserCreation.ps1`](PowerShell/AD-BulkUserCreation.ps1) | CSV-based AD user provisioning, simulation by default | **Yes, only with `-Apply` and confirmation** | Needs isolated AD lab testing |
-| [`Bash/linux-healthcheck.sh`](Bash/linux-healthcheck.sh) | Resource, disk, systemd and SSH status | No | Bash syntax checked automatically |
-| [`PowerShell/Security-BaselineChecker.ps1`](PowerShell/Security-BaselineChecker.ps1) | Indicative Windows firewall, Defender, BitLocker and UAC checks | No | Needs Windows testing |
+| Windows HealthCheck | [Windows-HealthCheck.zip](downloads/Windows-HealthCheck.zip) | `Lancer-Windows-HealthCheck.cmd` | Windows + PowerShell |
+| Security Baseline Checker | [Security-BaselineChecker.zip](downloads/Security-BaselineChecker.zip) | `Lancer-Security-BaselineChecker.cmd` | Windows + PowerShell |
+| AD Bulk User Creation | [AD-BulkUserCreation.zip](downloads/AD-BulkUserCreation.zip) | `Lancer-AD-BulkUserCreation.cmd` | Dry run by default; isolated AD lab required for actual provisioning |
+| Network Doctor | [Network-Doctor.zip](downloads/Network-Doctor.zip) | `Lancer-Network-Doctor.cmd` | Windows + Python 3 |
+| Linux HealthCheck | [Linux-HealthCheck.zip](downloads/Linux-HealthCheck.zip) | `Lancer-Linux-HealthCheck.cmd` | Windows with WSL/Linux installed; otherwise run .sh on Linux |
 
-## Quick start
+Alternatively, select **Code → Download ZIP** to get the whole repository. The launchers are also in `PowerShell/`, `Python/` and `Bash/`; a global **`Lancer-Toolbox.cmd`** menu is at the project root.
 
-### Network Doctor (Python 3.9+)
+**Important:** ZIPs are snapshots of their scripts; download the latest version after changes. A restrictive PowerShell execution policy may prevent a script from running. The launchers keep the terminal open so you can read any error; they do not silently disable those protections.
 
-```bash
-python Python/network_doctor.py
-python Python/network_doctor.py --host example.com --port 443 --json
-python -m unittest discover -s tests -v
-```
+## Included tools
 
-By default, Network Doctor probes TCP connectivity to `1.1.1.1:443` and resolves `example.com`. **It makes outgoing network requests.** Firewalls, proxies and ICMP filtering can create false negatives. Its diagnosis is a *hypothesis*, **not proof of the root cause**.
+| Source | Function | Side effects |
+|---|---|---|
+| [Windows-HealthCheck.ps1](PowerShell/Windows-HealthCheck.ps1) | Windows memory, disks, services, BitLocker; clear OK / WARNING / PROBLEM / NOT CHECKED status and optional JSON | Read-only |
+| [Security-BaselineChecker.ps1](PowerShell/Security-BaselineChecker.ps1) | Indicative firewall, Defender, BitLocker, UAC checks | Read-only |
+| [AD-BulkUserCreation.ps1](PowerShell/AD-BulkUserCreation.ps1) | CSV-based AD creation. Actual changes require `-Apply` and PowerShell confirmation in a separate manual run | **Double-click always dry run** |
+| [network_doctor.py](Python/network_doctor.py) | IPv4, gateway, external TCP, DNS and target port troubleshooting hypotheses | Network probes |
+| [linux-healthcheck.sh](Bash/linux-healthcheck.sh) | Linux resources, disk usage, systemd and SSH inspection | Read-only |
 
-CLI output is currently in French; structured output is available with `--json`. English CLI output is planned for a later version.
+Launchers do not automatically request elevated rights. Results may be unavailable due to permissions or host policy.
 
-### Linux HealthCheck
-
-```bash
-bash Bash/linux-healthcheck.sh
-```
-
-### Windows HealthCheck (PowerShell)
-
-**Windows double-click:** open `PowerShell/Lancer-Windows-HealthCheck.cmd`. The console will **wait for a keypress**, even after an execution error, so the result stays readable. This launcher does not silently bypass the PowerShell execution policy.
-
-Alternatively, start PowerShell yourself, then run:
-
-```powershell
-.\PowerShell\Windows-HealthCheck.ps1 -Language en
-.\PowerShell\Windows-HealthCheck.ps1 -Language fr -Pause
-```
-
-The `-Pause` option waits for Enter after a normal run. If you get an execution policy error, read and trust the script before unblocking it; don't disable security policies globally.
-
-```powershell
-.\PowerShell\Windows-HealthCheck.ps1
-.\PowerShell\Windows-HealthCheck.ps1 -OutputPath .\health.json
-```
-
-The script prints clear OK / WARNING / PROBLEM / NOT CHECKED statuses and a summary. Bilingual output:
+## Terminal usage
 
 ```powershell
 .\PowerShell\Windows-HealthCheck.ps1 -Language en -OutputPath .\health.json
-```
-
-Default disk/memory thresholds are indicative (warning below 15%, problem below 5%). It does not claim full Windows health or security; unavailable checks are marked NOT CHECKED.
-
-### Security Baseline Checker (PowerShell)
-
-```powershell
 .\PowerShell\Security-BaselineChecker.ps1
-```
-
-### AD Bulk User Creation (isolated lab only)
-
-```powershell
-# Dry run: creates nothing
 .\PowerShell\AD-BulkUserCreation.ps1 -CsvPath .\examples\ad-users.example.csv
-
-# Only after adapting the CSV to your lab domain:
-.\PowerShell\AD-BulkUserCreation.ps1 -CsvPath .\examples\ad-users.example.csv -Apply
+python Python/network_doctor.py --host example.com --port 443 --json
 ```
 
-The example CSV uses a **fictional domain** (`example.local`) and must not be applied as-is. Prerequisites for `-Apply`: the `ActiveDirectory` PowerShell module, sufficient permissions and a reachable domain controller. PowerShell confirmation is required. The initial password is requested securely at runtime, never included in the CSV. **Never commit passwords, recovery keys, tokens, or real organizational data.**
+On Linux: `bash Bash/linux-healthcheck.sh`. Network Doctor creates diagnostic network connections; proxies, ICMP filtering and network restrictions may cause false negatives. **Never commit passwords, keys, tokens, internship data, employer configurations or customer logs.**
 
-## Quality and limitations
+Only run real AD provisioning with `-Apply` **manually in an isolated lab** after carefully checking the CSV; the double-click launcher never enables `-Apply`.
 
-- Scripts are deliberately small and readable; Python needs no third-party packages.
-- Windows / AD scripts require manual validation on suitable lab systems before deployment.
-- Checks are not substitutes for monitoring, backups or a professional security audit.
-- GitHub Actions checks Python unit tests and Bash syntax on pushes and pull requests.
-- Do not run unreviewed scripts on production machines.
+## Quality and contribution
 
-## Roadmap: more original tools
+- Python tests: `python -m unittest discover -s tests -v`.
+- GitHub Actions checks Bash syntax.
+- PowerShell and AD scripts still require real Windows/lab testing.
+- [Contributing](CONTRIBUTING.en.md) · [Publishing](PUBLISHING.en.md) · [MIT License](LICENSE).
 
-1. **Incident Timeline** — reconstruct a symptom timeline from sanitized exported logs.
-2. **ChangeGuard** — preview likely impacts and plan rollback before routine changes.
-3. **Port Story** — explain DNS/TCP/routing test results in plain language.
-4. **[Config Drift Lite](https://github.com/YsenGrindel/Config-Drift-Lite)** — **available desktop prototype** for comparing two local directories, viewing line-by-line diffs and exporting an offline HTML report.
+## Future ideas
 
-The other three ideas are not implemented yet.
-
-### Config Drift Lite (Python 3.10+ with Tkinter)
-
-```bash
-python ConfigDriftLite/app.py
-```
-
-Now a standalone project: [Config Drift Lite repository](https://github.com/YsenGrindel/Config-Drift-Lite). The folder kept here is a historical snapshot; future development will happen in the dedicated repository.
-
-## Contribute and publish
-
-See [CONTRIBUTING.en.md](CONTRIBUTING.en.md) for contribution guidance and [PUBLISHING.en.md](PUBLISHING.en.md) for publication steps.
-
-## License
-
-MIT — see [LICENSE](LICENSE).
+**Incident Timeline**, **ChangeGuard** and **Port Story** are not yet implemented.
