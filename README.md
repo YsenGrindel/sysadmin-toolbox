@@ -90,7 +90,7 @@ Le CSV exemple utilise un **domaine fictif** (`example.local`) et ne doit pas ê
 1. **Incident Timeline** — reconstituer une chronologie de symptômes à partir de journaux exportés (sans données sensibles).
 2. **ChangeGuard** — prévisualiser l'impact et proposer un plan de retour arrière avant certaines modifications récurrentes.
 3. **Port Story** — expliquer un diagnostic de connexion en langage compréhensible à partir d'observations (DNS/TCP/routage).
-4. **[Config Drift Lite](ConfigDriftLite/README.md)** — **prototype d'application graphique déjà disponible** pour comparer deux dossiers de configurations, visualiser les modifications et exporter un rapport HTML local.
+4. **[Config Drift Lite](https://github.com/YsenGrindel/Config-Drift-Lite)** — **prototype d'application graphique déjà disponible** pour comparer deux dossiers de configurations, visualiser les modifications et exporter un rapport HTML local.
 
 Les trois autres outils originaux ne sont pas encore implémentés.
 
@@ -100,7 +100,7 @@ Les trois autres outils originaux ne sont pas encore implémentés.
 python ConfigDriftLite/app.py
 ```
 
-Documentation : [Config Drift Lite — Français](ConfigDriftLite/README.md) · [English](ConfigDriftLite/README.en.md). Fonctionne hors ligne et en lecture seule ; rapports potentiellement sensibles, à conserver localement.
+Projet désormais indépendant : [dépôt GitHub Config Drift Lite](https://github.com/YsenGrindel/Config-Drift-Lite). Le dossier local de ce dépôt conserve une copie historique du prototype ; les évolutions se feront sur le dépôt dédié.
 
 ## Contribuer et publier
 
