@@ -91,7 +91,7 @@ The example CSV uses a **fictional domain** (`example.local`) and must not be ap
 1. **Incident Timeline** — reconstruct a symptom timeline from sanitized exported logs.
 2. **ChangeGuard** — preview likely impacts and plan rollback before routine changes.
 3. **Port Story** — explain DNS/TCP/routing test results in plain language.
-4. **[Config Drift Lite](ConfigDriftLite/README.en.md)** — **available desktop prototype** for comparing two local directories, viewing line-by-line diffs and exporting an offline HTML report.
+4. **[Config Drift Lite](https://github.com/YsenGrindel/Config-Drift-Lite)** — **available desktop prototype** for comparing two local directories, viewing line-by-line diffs and exporting an offline HTML report.
 
 The other three ideas are not implemented yet.
 
@@ -101,7 +101,7 @@ The other three ideas are not implemented yet.
 python ConfigDriftLite/app.py
 ```
 
-Docs: [English](ConfigDriftLite/README.en.md) · [Français](ConfigDriftLite/README.md). Offline and read-only; reports may contain confidential information.
+Now a standalone project: [Config Drift Lite repository](https://github.com/YsenGrindel/Config-Drift-Lite). The folder kept here is a historical snapshot; future development will happen in the dedicated repository.
 
 ## Contribute and publish
 
