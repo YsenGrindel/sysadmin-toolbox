@@ -36,6 +36,17 @@ bash Bash/linux-healthcheck.sh
 
 ### Windows HealthCheck (PowerShell)
 
+**Windows double-click:** open `PowerShell/Lancer-Windows-HealthCheck.cmd`. The console will **wait for a keypress**, even after an execution error, so the result stays readable. This launcher does not silently bypass the PowerShell execution policy.
+
+Alternatively, start PowerShell yourself, then run:
+
+```powershell
+.\PowerShell\Windows-HealthCheck.ps1 -Language en
+.\PowerShell\Windows-HealthCheck.ps1 -Language fr -Pause
+```
+
+The `-Pause` option waits for Enter after a normal run. If you get an execution policy error, read and trust the script before unblocking it; don't disable security policies globally.
+
 ```powershell
 .\PowerShell\Windows-HealthCheck.ps1
 .\PowerShell\Windows-HealthCheck.ps1 -OutputPath .\health.json
