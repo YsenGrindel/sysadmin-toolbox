@@ -34,6 +34,17 @@ bash Bash/linux-healthcheck.sh
 
 ### Windows HealthCheck (PowerShell)
 
+**Pour un lancement par double-clic sous Windows**, ouvre `PowerShell/Lancer-Windows-HealthCheck.cmd`. Le lanceur **attend une touche avant de fermer la fenêtre**, y compris en cas d'erreur de PowerShell. Il ne désactive pas silencieusement la politique d'exécution.
+
+Sinon, ouvre toi-même PowerShell puis lance :
+
+```powershell
+.\PowerShell\Windows-HealthCheck.ps1 -Language fr
+.\PowerShell\Windows-HealthCheck.ps1 -Language fr -Pause
+```
+
+L'option `-Pause` attend la touche Entrée à la fin d'une exécution normale. Si Windows bloque le script selon sa politique d'exécution, vérifie sa provenance avant de le débloquer, sans désactiver globalement les protections.
+
 ```powershell
 .\PowerShell\Windows-HealthCheck.ps1
 .\PowerShell\Windows-HealthCheck.ps1 -OutputPath .\health.json
