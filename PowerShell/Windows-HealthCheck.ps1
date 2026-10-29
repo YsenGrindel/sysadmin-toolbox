@@ -14,7 +14,8 @@
 [CmdletBinding()]
 param(
     [ValidateSet('fr', 'en')][string]$Language = 'fr',
-    [string]$OutputPath
+    [string]$OutputPath,
+    [switch]$Pause
 )
 
 $ErrorActionPreference = 'Stop'
@@ -170,4 +171,12 @@ if ($OutputPath) {
     } catch {
         Write-Error "Impossible d'enregistrer le rapport : $($_.Exception.Message)"
     }
+}
+
+# Optional interactive hold for "Run with PowerShell" / mode interactif.
+# A dedicated .cmd launcher also pauses after PowerShell exits, including on error.
+if ($Pause) {
+    Write-Host ""
+    $prompt = if ($Language -eq 'en') { 'Press Enter to close this window' } else { 'Appuyez sur Entree pour fermer cette fenetre' }
+    Read-Host $prompt | Out-Null
 }
